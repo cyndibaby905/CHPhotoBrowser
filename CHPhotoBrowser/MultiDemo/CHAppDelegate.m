@@ -28,9 +28,7 @@
                               @"http://apple.xdnice.com/uploads/allimg/121106/12204K313-0.jpg"];
         
     self.window.rootViewController = [[CHPhotoBrowserViewController alloc] initWithImages:remoteImages];
-    
-    [self.window.rootViewController presentViewController:photoVC animated:YES completion:nil];
-    
+        
     
     [self.window makeKeyAndVisible];
     return YES;
