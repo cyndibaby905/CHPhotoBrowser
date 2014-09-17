@@ -1,0 +1,6 @@
+[submodule "CHPhotoBrowser/SDWebImage"]
+	path = CHPhotoBrowser/SDWebImage
+	url = https://github.com/rs/SDWebImage.git
+[submodule "CHPhotoBrowser/MDRadialProgress"]
+	path = CHPhotoBrowser/MDRadialProgress
+	url = https://github.com/mdinacci/MDRadialProgress.git
