@@ -10,7 +10,6 @@
 
 #define kCHCollectionViewCell @"kCHCollectionViewCell"
 #define kPadding 20
-#define kCount 10;
 
 @interface CHCollectionViewCell : UICollectionViewCell<UIScrollViewDelegate>
 @property(nonatomic,readonly)UIScrollView *containerView;
@@ -69,12 +68,20 @@
 @end
 
 
+@implementation CHViewController
+{
+    NSArray *images_;
+}
 
-@interface CHViewController ()
+- (instancetype)initWithImages:(NSArray*)images
+{
+    self = [super init];
+    if (self) {
+        images_ = [NSArray arrayWithArray:images];
+    }
+    return self;
+}
 
-@end
-
-@implementation CHViewController 
 - (void)loadView
 {
     [super loadView];
@@ -93,7 +100,7 @@
     
     _pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake((self.view.bounds.size.width - 150)/2.0, self.view.bounds.size.height - 30, 150, 20)];
     _pageControl.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
-    _pageControl.numberOfPages = kCount;
+    _pageControl.numberOfPages = images_.count;
     _pageControl.pageIndicatorTintColor = [UIColor colorWithWhite:0.75 alpha:1.0];
     _pageControl.currentPageIndicatorTintColor = [UIColor whiteColor];
     [self.view addSubview:_pageControl];
@@ -117,7 +124,7 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return kCount;
+    return images_.count;
 }
 
 
@@ -126,7 +133,7 @@
     
     CHCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kCHCollectionViewCell forIndexPath:indexPath];
     cell.containerView.zoomScale = 1.0;
-    cell.imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%d.jpg",indexPath.item + 1]];
+    cell.imageView.image = [UIImage imageNamed:images_[indexPath.item]];
     return cell;
 }
 

@@ -15,7 +15,7 @@
 {
     // Override point for customization after application launch.
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-    self.window.rootViewController = [CHViewController new];
+    self.window.rootViewController = [[CHViewController alloc] initWithImages:@[@"1.jpg",@"2.jpg",@"3.jpg",@"4.jpg",@"5.jpg",@"6.jpg",@"7.jpg",@"8.jpg",@"9.jpg",@"10.jpg"]];
     [self.window makeKeyAndVisible];
     return YES;
 }
