@@ -10,6 +10,7 @@
 
 #define kCHCollectionViewCell @"kCHCollectionViewCell"
 #define kPadding 20
+#define kCount 10;
 
 @interface CHCollectionViewCell : UICollectionViewCell<UIScrollViewDelegate>
 @property(nonatomic,readonly)UIScrollView *containerView;
@@ -82,13 +83,20 @@
     _collectionFlowLayout.minimumLineSpacing = 0;
     _collectionFlowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width + kPadding, self.view.bounds.size.height) collectionViewLayout:_collectionFlowLayout];
-    _collectionView.backgroundColor = [UIColor whiteColor];
+    _collectionView.backgroundColor = [UIColor blackColor];
     _collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth |UIViewAutoresizingFlexibleHeight;
     _collectionView.delegate = self;
     _collectionView.dataSource = self;
     _collectionView.pagingEnabled = YES;
 
     [self.view addSubview:_collectionView];
+    
+    _pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake((self.view.bounds.size.width - 150)/2.0, self.view.bounds.size.height - 30, 150, 20)];
+    _pageControl.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
+    _pageControl.numberOfPages = kCount;
+    _pageControl.pageIndicatorTintColor = [UIColor colorWithWhite:0.75 alpha:1.0];
+    _pageControl.currentPageIndicatorTintColor = [UIColor whiteColor];
+    [self.view addSubview:_pageControl];
     
 }
 
@@ -109,7 +117,7 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return 10;
+    return kCount;
 }
 
 
@@ -118,9 +126,13 @@
     
     CHCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kCHCollectionViewCell forIndexPath:indexPath];
     cell.containerView.zoomScale = 1.0;
-    cell.imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%d.jpg",indexPath.item%4 + 1]];
+    cell.imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%d.jpg",indexPath.item + 1]];
     return cell;
 }
 
-
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    NSInteger index = scrollView.contentOffset.x / (self.view.bounds.size.width + kPadding);
+    _pageControl.currentPage = index;
+}
 @end
