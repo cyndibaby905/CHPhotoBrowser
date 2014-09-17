@@ -151,6 +151,9 @@
         
     } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
         cell.progressView.hidden = YES;
+        if (error) {
+            cell.imageView.image = [UIImage imageNamed:@"fail_pic.png"];
+        }
     }];
     
     return cell;
