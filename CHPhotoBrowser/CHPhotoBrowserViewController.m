@@ -1,12 +1,12 @@
 //
-//  CHViewController.m
-//  MultiDemo
+//  CHPhotoBrowserViewController.m
+//  CHPhotoBrowser
 //
 //  Created by hangchen on 9/15/14.
 //  Copyright (c) 2014 hangchen. All rights reserved.
 //
 
-#import "CHViewController.h"
+#import "CHPhotoBrowserViewController.h"
 
 #define kCHCollectionViewCell @"kCHCollectionViewCell"
 #define kPadding 20
@@ -68,7 +68,7 @@
 @end
 
 
-@implementation CHViewController
+@implementation CHPhotoBrowserViewController
 {
     NSArray *images_;
 }
