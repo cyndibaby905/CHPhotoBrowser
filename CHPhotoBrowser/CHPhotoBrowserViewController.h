@@ -13,7 +13,6 @@
 @interface CHPhotoBrowserViewController : UIViewController<UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
 @property(nonatomic,readonly)UICollectionView *collectionView;
 @property(nonatomic,readonly)UICollectionViewFlowLayout *collectionFlowLayout;
-@property(nonatomic,readonly)UIPageControl *pageControl;
 - (instancetype)initWithImages:(NSArray*)images;
 @end
 

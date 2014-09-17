@@ -8,8 +8,11 @@
 
 #import "CHPhotoBrowserViewController.h"
 #import "CHAppDelegate.h"
+#import <AssetsLibrary/AssetsLibrary.h>
 
-@implementation CHAppDelegate
+@implementation CHAppDelegate {
+    ALAssetsLibrary *library_;
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -26,9 +29,9 @@
                               @"http://img4.duitang.com/uploads/item/201304/27/20130427014742_aFFaw.jpeg",
                               @"http://cdn.duitang.com/uploads/item/201304/27/20130427012418_HehyL.jpeg",
                               @"http://apple.xdnice.com/uploads/allimg/121106/12204K313-0.jpg"];
-        
+    
     self.window.rootViewController = [[CHPhotoBrowserViewController alloc] initWithImages:remoteImages];
-        
+       
     
     [self.window makeKeyAndVisible];
     return YES;

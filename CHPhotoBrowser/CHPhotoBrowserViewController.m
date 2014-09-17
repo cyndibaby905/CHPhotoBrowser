@@ -8,6 +8,7 @@
 
 #import "CHPhotoBrowserViewController.h"
 #import "UIImageView+WebCache.h"
+#import <AssetsLibrary/AssetsLibrary.h>
 
 #define kCHCollectionImageViewCell @"kCHCollectionImageViewCell"
 #define kPadding 20
@@ -92,12 +93,14 @@
 @implementation CHPhotoBrowserViewController {
     NSArray *images_;
     CGPoint contentOffsetAfterRotation_;
+    ALAssetsLibrary *library_;
 }
 
 - (instancetype)initWithImages:(NSArray*)images
 {
     if (self = [super init]) {
         images_ = [NSArray arrayWithArray:images];
+        library_ = [ALAssetsLibrary new];
     }
     return self;
 }
@@ -120,14 +123,6 @@
         _collectionView;
     })];
     
-    [self.view addSubview:({
-        _pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake((self.view.bounds.size.width - 150)/2.0, self.view.bounds.size.height - 30, 150, 20)];
-        _pageControl.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin;
-        _pageControl.numberOfPages = images_.count;
-        _pageControl.pageIndicatorTintColor = [UIColor colorWithWhite:0.75 alpha:1.0];
-        _pageControl.currentPageIndicatorTintColor = [UIColor whiteColor];
-        _pageControl;
-    })];
     
 }
 
@@ -146,23 +141,39 @@
     NSString *imageAddress = images_[indexPath.item];
     CHCollectionImageViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kCHCollectionImageViewCell forIndexPath:indexPath];
     cell.containerView.zoomScale = 1.0;
-    [cell.imageView sd_setImageWithURL:[NSURL URLWithString:imageAddress] placeholderImage:[UIImage imageNamed:@"default_pic.png"] options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize) {
-        [cell updateProgress:(CGFloat)receivedSize/expectedSize];
-        
-    } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-        cell.progressView.hidden = YES;
-        if (error) {
+    if ([imageAddress hasPrefix:@"http"]) {
+        [cell.imageView sd_setImageWithURL:[NSURL URLWithString:imageAddress] placeholderImage:[UIImage imageNamed:@"default_pic.png"] options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+            [cell updateProgress:(CGFloat)receivedSize/expectedSize];
+            
+        } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+            cell.progressView.hidden = YES;
+            if (error) {
+                cell.imageView.image = [UIImage imageNamed:@"fail_pic.png"];
+            }
+        }];
+    }
+    else if([imageAddress hasPrefix:@"assets-library"]) {
+        [library_ assetForURL:[NSURL URLWithString:imageAddress] resultBlock:^(ALAsset *asset) {
+            if (!asset) {
+                cell.imageView.image = [UIImage imageNamed:@"fail_pic.png"];
+            }
+            else {
+                cell.imageView.image = [UIImage imageWithCGImage:asset.defaultRepresentation.fullScreenImage];
+            }
+        } failureBlock:^(NSError *error) {
             cell.imageView.image = [UIImage imageNamed:@"fail_pic.png"];
+
+        }];
+    }
+    else {
+        UIImage *image = [UIImage imageWithContentsOfFile:imageAddress];;
+        if (!image) {
+            image = [UIImage imageNamed:@"fail_pic.png"];
         }
-    }];
+        cell.imageView.image = image;
+    }
     
     return cell;
-}
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
-    NSInteger index = scrollView.contentOffset.x / self.view.bounds.size.width + kPadding;
-    _pageControl.currentPage = index;
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
